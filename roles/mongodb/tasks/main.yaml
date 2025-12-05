@@ -1,0 +1,26 @@
+  - name: copy the repo
+    ansible.builtin.copy:
+      src: mongo.repo
+      dest: /etc/yum.repos.d/mongo.repo
+
+  - name: install mango db 
+    ansible.builtin.dnf:
+      name: mongodb-org
+      state: present
+  
+  - name: start the mango service
+    ansible.builtin.service:
+      name: mongod
+      state: started
+      enabled: yes
+
+  - name: relace the IP
+    ansible.builtin.replace:
+      path: /etc/mongod.conf
+      regexp: '127.0.0.1'
+      replace: '0.0.0.0'
+
+  - name: restart the mango service
+    ansible.builtin.service:
+      name: mongod
+      state: restarted
